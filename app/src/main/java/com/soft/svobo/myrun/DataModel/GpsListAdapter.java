@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.soft.svobo.myrun.Common.TimeTool;
 import com.soft.svobo.myrun.R;
 
 import java.text.DecimalFormat;
@@ -34,17 +35,23 @@ public class GpsListAdapter extends ArrayAdapter<GpsPoint>
         if (ptName != null) {
             ptName.setText(point.name);
         }
-        /*
+
+        TextView ptLen = (TextView) convertView.findViewById(R.id.pointLen);
+        if (ptLen != null) {
+            DecimalFormat df = new DecimalFormat("#.##");
+            ptLen.setText(df.format(point.splitlen));
+        }
+
         TextView ptTime = (TextView) convertView.findViewById(R.id.pointTime);
         if (ptTime != null && point.timeStr!=null) {
-            ptTime.setText(point.timeStr);
-        }*/
+            ptTime.setText( TimeTool.convertTime(point.time.getTime(),"HH:mm:ss"));
+        }
 
         TextView ptSplit = (TextView) convertView.findViewById(R.id.pointSplit);
         if (ptSplit!=null) {
-            double val = (point.split/(double)60000);
-            DecimalFormat f = new DecimalFormat("##.00");
-            ptSplit.setText(f.format(val));
+            TimeTool tool = new TimeTool();
+            String time = tool.convertTime(point.split);
+            ptSplit.setText(time);
         }
         return convertView;
    }

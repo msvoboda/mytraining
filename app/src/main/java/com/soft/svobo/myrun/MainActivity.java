@@ -1,5 +1,6 @@
 package com.soft.svobo.myrun;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,16 +19,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.soft.svobo.myrun.Common.OpenFileDialog;
 import com.soft.svobo.myrun.DataModel.GpsList;
 import com.soft.svobo.myrun.DataModel.GpsListAdapter;
-import com.soft.svobo.myrun.LocationTools.GpxImporter;
+import com.soft.svobo.myrun.LocationTools.GpxRouteImporter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OpenFileDialog.OpenDialogListener {
 
     com.soft.svobo.myrun.Common.OpenFileDialog _dlg = null;
+    View _footerView;
+    View _headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -154,17 +160,30 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void OnSelectedFile(String fileName) {
 
-        GpxImporter importer = new GpxImporter(fileName);
+        GpxRouteImporter importer = new GpxRouteImporter(fileName);
         try {
-            importer.ImportTraining();
+            importer.ImportRoute();
             GpsList points = importer.getList();
+            GpsList tracks = importer.getTrackList();
 
             GpsListAdapter adapter = new GpsListAdapter(this, R.layout.point_layout, points);
             //setFragment(R.id.nav_training);
             ListView lv = (ListView)findViewById(R.id.listPoints);
             lv.setAdapter(adapter);
+            if (_headerView==null) {
+                _headerView = ((LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.training_header, null, false);
+                lv.addHeaderView(_headerView);
+            }
+            if (_footerView==null) {
+                _footerView = ((LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.training_footer, null, false);
+                lv.addFooterView(_footerView);
+            }
+            TextView txTotal = (TextView)findViewById(R.id.textTotal);
+            txTotal.setText("Total:" + points.getTotalTimeStr());
+            TextView txTotalLen = (TextView)findViewById(R.id.textTotalLen);
+            txTotalLen.setText("Run(km):"+ tracks.getTotalLenStr());
             //lv.a
-            Snackbar.make(this.getCurrentFocus(),"Points:"+adapter.getCount(), Snackbar.LENGTH_LONG)
+            Snackbar.make(this.getCurrentFocus(),"Points:"+tracks.size(), Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
         catch(Exception ex)

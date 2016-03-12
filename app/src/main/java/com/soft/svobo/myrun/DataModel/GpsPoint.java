@@ -17,6 +17,7 @@ public class GpsPoint
     public double lon;
     public Date time;
     public String timeStr;
-    public double split; //(seconds)
+    public long split; //(seconds)
+    public double splitlen;
     public double ele;
 }

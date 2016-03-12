@@ -4,22 +4,28 @@
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/pointName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.8"
+        android:layout_weight="0.5"
         android:text="Name" />
-    <!--
+    <TextView
+        android:id="@+id/pointLen"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:text="100m" />
     <TextView
         android:id="@+id/pointTime"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
+        android:layout_weight="0.3"
         android:text="100" />
-        -->
+
     <TextView
         android:id="@+id/pointSplit"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
+        android:layout_weight="0.3"
+        android:textAlignment="viewEnd"
         android:text="seconds" />
 </LinearLayout>
